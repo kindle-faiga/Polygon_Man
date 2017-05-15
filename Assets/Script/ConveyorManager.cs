@@ -9,13 +9,16 @@ public class ConveyorManager : MonoBehaviour
 	[SerializeField] 
 	private float length = 0;
 	[SerializeField]
-	private float size = 0.5f;
+	private float rotation = 100;
+	private List<Transform> wheels = new List<Transform>();
 
 	void Start () 
 	{
 		GameObject wheelObject = Resources.Load("Prefab/Wheel") as GameObject;
 
 		Vector3 pos = transform.position;
+
+		float size = wheelObject.transform.localScale.sqrMagnitude;
 
 		if (!isRight)
 		{
@@ -29,6 +32,18 @@ public class ConveyorManager : MonoBehaviour
 			GameObject wheel = Instantiate(wheelObject, p, transform.rotation) as GameObject;
 
 			wheel.transform.parent = transform;
+
+			wheels.Add(wheel.transform);
+		}
+	}
+
+	void FixedUpdate()
+	{
+		float angle = Time.time * (isRight ? -rotation : rotation);
+
+		foreach(Transform wheel in wheels)
+		{
+			wheel.eulerAngles = new Vector3(0, 0, angle);
 		}
 	}
 }
