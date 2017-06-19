@@ -5,9 +5,9 @@ using UnityEngine;
 public class BridgeManager : MonoBehaviour 
 {
 	[SerializeField]
-	private List<Transform> joints = new List<Transform>();
+	List<Transform> joints = new List<Transform>();
 
-	void Start () 
+	void Awake ()
 	{
 		for (int i = 0; i < transform.childCount; ++i)
 		{
