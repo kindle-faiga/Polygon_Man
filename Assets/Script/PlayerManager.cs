@@ -14,30 +14,38 @@ namespace PolygonMan
 		float rotation = 0;
         [SerializeField]
         float gravity = 0;
-
-        bool isSpin = false;
         [SerializeField]
+		float spinTime = 1.0f;
+
         bool isGround = true;
+        float spinRange = 0;
         Rigidbody2D rigitbody2d;
 
-        public bool GetISRight() { return isRight; }
-        public void Turn() { isRight = !isRight; speed = -speed; }
+		public bool GetISRight() { return isRight; }
+		public bool GetIsGround() { return isGround; }
+		public void SetIsGround(Vector3 groundPos)
+		{
+			isGround = true;
+			transform.position = new Vector3(transform.position.x, groundPos.y, 0);
+		}
+		public void ResetIsGround() { isGround = false; }
 
-        public void SetIsSpin() { isSpin = true; }
-        public void ResetIsSpin() { isSpin = false; }
+		public void Turn()
+		{
+            isRight = !isRight; 
+            speed = -speed;
+		}
 
-        public bool GetIsGround() { return isGround; }
-        public void SetIsGround(Vector3 groundPos)
-        {
-            isGround = true;
-            transform.position = new Vector3(transform.position.x, groundPos.y, 0);
-        }
-        public void ResetIsGround(){ isGround = false; }
+		public void Spin()
+		{
+            spinRange = Time.time;
+		}
 
         void Start()
         {
             rigitbody2d = GetComponent<Rigidbody2D>();
             if (!isRight) speed = -speed;
+            spinRange = Time.time;
         }
 
         void FixedUpdate()
@@ -51,12 +59,8 @@ namespace PolygonMan
 				rigitbody2d.velocity = new Vector2(0, -gravity);
 			}
 
-            if (isSpin)
-            {
-				float angle = Time.time * (isRight ? -rotation : rotation);
-                Debug.Log(angle);
-				transform.eulerAngles = new Vector3(0, 0, angle);
-            }
+            float angle = (Time.time - spinRange) * spinTime;
+            transform.eulerAngles = Vector3.Slerp(Vector3.zero, new Vector3(0, 0, 360), angle);
         }
     }
 }

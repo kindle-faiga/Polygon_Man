@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using UnityEngine;
 
 namespace PolygonMan
@@ -37,14 +36,14 @@ namespace PolygonMan
 
                         if (anotherPos.y < pos.y)
 						{
-							StartCoroutine(AddStroke());
+							AddStroke();
 							Destroy(collision.gameObject);
 						}
 						else
 						{
 							if (pos.y.Equals(anotherPos.y) && pos.x < anotherPos.x)
 							{
-								StartCoroutine(AddStroke());
+								AddStroke();
 								Destroy(collision.gameObject);
 							}
 							else
@@ -78,17 +77,13 @@ namespace PolygonMan
             }
         }
 
-        IEnumerator AddStroke()
+        void AddStroke()
         {
 			polygon = (Polygon)Enum.ToObject(typeof(Polygon), (int)polygon + 1);
 
             sprite.sprite = Resources.Load<Sprite>("Sprite/" + polygon.ToString());
 
-            playerManager.SetIsSpin();
-
-            yield return new WaitForSeconds(0.5f);
-
-            playerManager.ResetIsSpin();
+            playerManager.Spin();
         }
 	}
 }
