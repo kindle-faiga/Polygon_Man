@@ -2,16 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BridgeManager : MonoBehaviour 
+namespace PolygonMan
 {
-	[SerializeField]
-	List<Transform> joints = new List<Transform>();
+    [RequireComponent(typeof(GimmickManager))]
+    public class BridgeManager : MonoBehaviour
+    {
+        GimmickManager gimmickManager;
 
-	void Awake ()
-	{
-		for (int i = 0; i < transform.childCount; ++i)
-		{
-			joints.Add(transform.GetChild(i));
-		}
-	}
+        private void Start()
+        {
+            gimmickManager = GetComponent<GimmickManager>();
+        }
+    }
 }

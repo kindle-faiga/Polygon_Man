@@ -1,50 +1,62 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody2D))]
-[RequireComponent(typeof(BoxCollider2D))]
-public class PlayerManager : MonoBehaviour 
+namespace PolygonMan
 {
-	[SerializeField]
-	bool isRight = true;
-	[SerializeField]
-    int polygon = 3;
-    [SerializeField]
-	float speed = 0;
-	[SerializeField]
-	float gravity = 0;
-
-	Transform groundCheck;
-    Rigidbody2D rigitbody2d;
-
-    bool isGround = true;
-
-    public int GetPolygin() { return polygon; }
-    public bool GetISRight() { return isRight; }
-    public void SetIsRight() { isRight = !isRight; speed = -speed; }
-
-	void Awake ()
-	{
-        rigitbody2d = GetComponent<Rigidbody2D>();
-        groundCheck = transform.GetChild(0);
-        if (!isRight) speed = -speed;
-	}
-
-    void Update()
+    [RequireComponent(typeof(Rigidbody2D))]
+    [RequireComponent(typeof(BoxCollider2D))]
+    public class PlayerManager : MonoBehaviour
     {
-        isGround = Physics2D.Linecast(transform.position, groundCheck.position, 1 << LayerMask.NameToLayer("Ground"));
-    }
+        [SerializeField]
+        bool isRight = true;
+        [SerializeField]
+        float speed = 0;
+		[SerializeField]
+		float rotation = 0;
+        [SerializeField]
+        float gravity = 0;
 
-    void FixedUpdate()
-    {
-        if (isGround)
+        bool isSpin = false;
+        [SerializeField]
+        bool isGround = true;
+        Rigidbody2D rigitbody2d;
+
+        public bool GetISRight() { return isRight; }
+        public void Turn() { isRight = !isRight; speed = -speed; }
+
+        public void SetIsSpin() { isSpin = true; }
+        public void ResetIsSpin() { isSpin = false; }
+
+        public bool GetIsGround() { return isGround; }
+        public void SetIsGround(Vector3 groundPos)
         {
-            rigitbody2d.velocity = new Vector2(speed, 0);
-		}
-        else
+            isGround = true;
+            transform.position = new Vector3(transform.position.x, groundPos.y, 0);
+        }
+        public void ResetIsGround(){ isGround = false; }
+
+        void Start()
         {
-            rigitbody2d.velocity = new Vector2(0, -gravity);
+            rigitbody2d = GetComponent<Rigidbody2D>();
+            if (!isRight) speed = -speed;
+        }
+
+        void FixedUpdate()
+        {
+			if (isGround)
+			{
+				rigitbody2d.velocity = new Vector2(speed, 0);
+			}
+			else
+			{
+				rigitbody2d.velocity = new Vector2(0, -gravity);
+			}
+
+            if (isSpin)
+            {
+				float angle = Time.time * (isRight ? -rotation : rotation);
+                Debug.Log(angle);
+				transform.eulerAngles = new Vector3(0, 0, angle);
+            }
         }
     }
 }

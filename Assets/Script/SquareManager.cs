@@ -1,28 +1,94 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 
-public class SquareManager : MonoBehaviour 
+namespace PolygonMan
 {
-    PlayerManager playerManager;
+    enum Polygon {Triangle, Diamond, Pentagon, Hexagon, Heptagon, Octagon};
 
-    void Awake()
+    [RequireComponent(typeof(PlayerManager))]
+    public class SquareManager : MonoBehaviour
     {
-        playerManager = GetComponent<PlayerManager>(); 
-    }
+        [SerializeField]
+        Polygon polygon = Polygon.Triangle;
 
-    void OnTriggerEnter2D(Collider2D collision)
-    {
-        PlayerManager p = collision.transform.GetComponent<PlayerManager>();
+        SpriteRenderer sprite;
+        PlayerManager playerManager;
 
-        if(p != null && p.tag.Equals("Polygon"))
+        public string GetPolygon() { return polygon.ToString(); }
+
+		void Start()
+		{
+			sprite = GetComponent<SpriteRenderer>();
+			playerManager = GetComponent<PlayerManager>();
+		}
+
+        void OnTriggerEnter2D(Collider2D collision)
         {
-            if (playerManager.GetPolygin().Equals(p.GetPolygin()))
+            switch(collision.tag)
             {
-                Destroy(collision.gameObject);
-            }
+                case "Polygon":
+					SquareManager p = collision.GetComponent<SquareManager>();
 
-            playerManager.SetIsRight();
+					if (polygon.ToString().Equals(p.GetPolygon()))
+					{
+						Vector3 pos = transform.position;
+						Vector3 anotherPos = collision.transform.position;
+
+                        if (anotherPos.y < pos.y)
+						{
+							StartCoroutine(AddStroke());
+							Destroy(collision.gameObject);
+						}
+						else
+						{
+							if (pos.y.Equals(anotherPos.y) && pos.x < anotherPos.x)
+							{
+								StartCoroutine(AddStroke());
+								Destroy(collision.gameObject);
+							}
+							else
+							{
+								Destroy(gameObject);
+							}
+						}
+					}
+					else
+					{
+						playerManager.Turn();
+					}
+                    break;
+                case "Ground":
+                    playerManager.SetIsGround(collision.transform.position);
+                    break;
+                default:
+                    break;
+            }
         }
-    }
+
+        void OnTriggerExit2D(Collider2D collision)
+        {
+            switch (collision.tag)
+            {
+                case "Ground":
+                    playerManager.ResetIsGround();
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        IEnumerator AddStroke()
+        {
+			polygon = (Polygon)Enum.ToObject(typeof(Polygon), (int)polygon + 1);
+
+            sprite.sprite = Resources.Load<Sprite>("Sprite/" + polygon.ToString());
+
+            playerManager.SetIsSpin();
+
+            yield return new WaitForSeconds(0.5f);
+
+            playerManager.ResetIsSpin();
+        }
+	}
 }
