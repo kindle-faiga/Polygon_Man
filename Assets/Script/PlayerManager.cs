@@ -10,8 +10,6 @@ namespace PolygonMan
         bool isRight = true;
         [SerializeField]
         float speed = 0;
-		[SerializeField]
-		float rotation = 0;
         [SerializeField]
         float gravity = 0;
         [SerializeField]
