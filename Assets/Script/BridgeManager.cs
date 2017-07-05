@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace PolygonMan
 {
@@ -8,10 +6,25 @@ namespace PolygonMan
     public class BridgeManager : MonoBehaviour
     {
         GimmickManager gimmickManager;
+        private float depth = 10.0f;
 
-        private void Start()
+        void Start()
         {
             gimmickManager = GetComponent<GimmickManager>();
+        }
+
+        void Update()
+        {
+			if (Input.GetMouseButtonDown(0))
+			{
+				Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                RaycastHit2D hit = Physics2D.Raycast((Vector2)ray.origin, (Vector2)ray.direction, depth, 1 << LayerMask.NameToLayer("Bridge"));
+
+				if (hit.collider)
+				{
+					Debug.Log(hit.collider.gameObject.name);
+				}
+			}
         }
     }
 }
