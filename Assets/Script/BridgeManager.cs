@@ -25,6 +25,17 @@ namespace PolygonMan
 					Debug.Log(hit.collider.gameObject.name);
 				}
 			}
+
+			if (Input.GetMouseButton(0))
+			{
+				Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                gimmickManager.GetParts()[1].GetComponent<SpriteRenderer>().size = new Vector2(Vector2.Distance(new Vector2(mousePos.x,mousePos.y), new Vector2(gimmickManager.GetParts()[1].position.x, gimmickManager.GetParts()[1].position.y)) * 2,1);
+
+                Vector3 worldMousePos = Camera.main.WorldToScreenPoint(gimmickManager.GetParts()[1].position);
+                Quaternion rotation = Quaternion.LookRotation(Vector3.forward, Input.mousePosition - worldMousePos);
+				gimmickManager.GetParts()[1].localRotation = rotation;
+                gimmickManager.GetParts()[1].localEulerAngles = new Vector3(0, 0, gimmickManager.GetParts()[1].localEulerAngles.z + 90.0f);
+			}
         }
     }
 }

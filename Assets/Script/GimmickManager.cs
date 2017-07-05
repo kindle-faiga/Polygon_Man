@@ -5,7 +5,7 @@ namespace PolygonMan
 {
     public class GimmickManager : MonoBehaviour
     {
-
+        [SerializeField]
         List<Transform> parts = new List<Transform>();
 
 		public List<Transform> GetParts()
