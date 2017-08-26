@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace PolygonMan
 {
@@ -7,6 +8,8 @@ namespace PolygonMan
 [RequireComponent(typeof(SpriteRenderer))]
     public class BridgeConnector : MonoBehaviour
     {
+        [SerializeField]
+		List<SquareManager> squareManagers = new List<SquareManager>();
         SpriteRenderer spriteRenderer;
 		BoxCollider2D col;
         Vector2 defaultColSize;
@@ -20,6 +23,11 @@ namespace PolygonMan
             col = GetComponent<BoxCollider2D>();
             defaultColSize = col.size;
             defaultColOffset = col.offset;
+        }
+
+        public void AddPlayer(SquareManager sqr)
+        {
+            squareManagers.Add(sqr);
         }
 
         RaycastHit2D IsSelected()
@@ -96,7 +104,7 @@ namespace PolygonMan
 
                         Vector2 size = new Vector2(spriteRenderer.size.x + defaultColSize.x, defaultColSize.y);
                         Vector2 offset = new Vector2(defaultColOffset.x+spriteRenderer.size.x/2, defaultColOffset.y);
-                        SetCollider(size, offset, "Ground");
+                        SetCollider(size, offset, "Bridge");
 					}
                     else
                     {

@@ -13,6 +13,8 @@ namespace PolygonMan
 
         SpriteRenderer sprite;
         PlayerManager playerManager;
+        bool isGround = true;
+        bool isBridge = false;
 
         public string GetPolygon() { return polygon.ToString(); }
 
@@ -58,8 +60,14 @@ namespace PolygonMan
 					}
                     break;
                 case "Ground":
+                    isGround = true;
                     playerManager.SetIsGround(collision.transform.position);
-                    break;
+					break;
+				case "Bridge":
+                    isBridge = true;
+					playerManager.SetIsGround(collision.transform.position);
+                    collision.GetComponent<BridgeConnector>().AddPlayer(this);
+					break;
                 default:
                     break;
             }
@@ -70,8 +78,13 @@ namespace PolygonMan
             switch (collision.tag)
             {
                 case "Ground":
-                    playerManager.ResetIsGround();
-                    break;
+                    isGround = false;
+                    if(!isBridge)playerManager.ResetIsGround();
+					break;
+				case "Bridge":
+                    isBridge = false;
+                    if (!isGround) playerManager.ResetIsGround();
+					break;
                 default:
                     break;
             }
