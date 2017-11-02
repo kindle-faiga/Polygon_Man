@@ -16,6 +16,7 @@ namespace PolygonMan
 		float spinTime = 1.0f;
 
         bool isGround = true;
+        bool isGoal = false;
         float spinRange = 0;
         Rigidbody2D rigitbody2d;
 
@@ -32,7 +33,15 @@ namespace PolygonMan
 		{
             isRight = !isRight; 
             speed = -speed;
+            transform.GetComponent<SpriteRenderer>().flipX = !isRight;
 		}
+
+        public void Goal()
+        {
+            isGoal = true;
+            rigitbody2d.velocity = new Vector2(0, 0);
+            transform.eulerAngles = Vector3.zero;
+        }
 
 		public void Spin()
 		{
@@ -48,17 +57,20 @@ namespace PolygonMan
 
         void FixedUpdate()
         {
-			if (isGround)
-			{
-				rigitbody2d.velocity = new Vector2(speed, 0);
-			}
-			else
-			{
-				rigitbody2d.velocity = new Vector2(0, -gravity);
-			}
+            if (!isGoal)
+            {
+                if (isGround)
+                {
+                    rigitbody2d.velocity = new Vector2(speed, 0);
+                }
+                else
+                {
+                    rigitbody2d.velocity = new Vector2(0, -gravity);
+                }
 
-            float angle = (Time.time - spinRange) * spinTime;
-            transform.eulerAngles = Vector3.Slerp(Vector3.zero, new Vector3(0, 0, 360), angle);
+                float angle = (Time.time - spinRange) * spinTime;
+                transform.eulerAngles = Vector3.Slerp(Vector3.zero, new Vector3(0, 0, 360), angle);
+            }
         }
     }
 }

@@ -30,6 +30,17 @@ namespace PolygonMan
             squareManagers.Add(sqr);
         }
 
+		public void DeletePlayer(SquareManager _sqr)
+		{
+            foreach (SquareManager sqr in squareManagers.ToArray())
+            {
+                if (sqr.transform.Equals(_sqr.transform))
+                {
+                    squareManagers.Remove(sqr);
+                }
+            }
+		}
+
         RaycastHit2D IsSelected()
         {
 			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -40,7 +51,7 @@ namespace PolygonMan
         {
             Vector2 targetPos = new Vector2(target.x, target.y);
 			Vector2 position = new Vector2(transform.position.x, transform.position.y);
-			spriteRenderer.size = new Vector2(Vector2.Distance(targetPos, position) * 4, 1);
+			spriteRenderer.size = new Vector2(Vector2.Distance(targetPos, position) * 2, 1);
         }
 
         void SetAngle(Vector3 crum, Vector3 target)
@@ -62,6 +73,13 @@ namespace PolygonMan
             state = BridgeState.Release;
 			spriteRenderer.size = Vector2.one;
 			transform.localEulerAngles = Vector3.one;
+
+			foreach (SquareManager sqr in squareManagers.ToArray())
+			{
+                sqr.transform.GetComponent<PlayerManager>().ResetIsGround();
+			}
+
+            squareManagers.Clear();
         }
 
         void Update()

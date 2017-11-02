@@ -26,48 +26,58 @@ namespace PolygonMan
 
         void OnTriggerEnter2D(Collider2D collision)
         {
-            switch(collision.tag)
+            switch (collision.tag)
             {
                 case "Polygon":
-					SquareManager p = collision.GetComponent<SquareManager>();
+                    SquareManager p = collision.GetComponent<SquareManager>();
 
-					if (polygon.ToString().Equals(p.GetPolygon()))
-					{
-						Vector3 pos = transform.position;
-						Vector3 anotherPos = collision.transform.position;
+                    if (polygon.ToString().Equals(p.GetPolygon()))
+                    {
+                        Vector3 pos = transform.position;
+                        Vector3 anotherPos = collision.transform.position;
 
                         if (anotherPos.y < pos.y)
-						{
-							AddStroke();
-							Destroy(collision.gameObject);
-						}
-						else
-						{
-							if (pos.y.Equals(anotherPos.y) && pos.x < anotherPos.x)
-							{
-								AddStroke();
-								Destroy(collision.gameObject);
-							}
-							else
-							{
-								Destroy(gameObject);
-							}
-						}
-					}
-					else
-					{
-						playerManager.Turn();
-					}
+                        {
+                            AddStroke();
+                            Destroy(collision.gameObject);
+                        }
+                        else
+                        {
+                            if (pos.y.Equals(anotherPos.y) && pos.x < anotherPos.x)
+                            {
+                                AddStroke();
+                                Destroy(collision.gameObject);
+                            }
+                            else
+                            {
+                                Destroy(gameObject);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        playerManager.Turn();
+                    }
                     break;
+				case "Wall":
+					playerManager.Turn();
+					break;
                 case "Ground":
                     isGround = true;
                     playerManager.SetIsGround(collision.transform.position);
-					break;
-				case "Bridge":
+                    break;
+                case "Bridge":
                     isBridge = true;
-					playerManager.SetIsGround(collision.transform.position);
+                    playerManager.SetIsGround(collision.transform.position);
                     collision.GetComponent<BridgeConnector>().AddPlayer(this);
-					break;
+                    break;
+                case "Goal":
+                    if (collision.GetComponent<GoalManager>().GetPolygon().Equals(polygon.ToString()))
+                    {
+                        transform.position = collision.transform.position;
+                        playerManager.Goal();
+                    }
+                    break;
                 default:
                     break;
             }
@@ -83,6 +93,7 @@ namespace PolygonMan
 					break;
 				case "Bridge":
                     isBridge = false;
+                    collision.GetComponent<BridgeConnector>().DeletePlayer(this);
                     if (!isGround) playerManager.ResetIsGround();
 					break;
                 default:
