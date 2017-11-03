@@ -10,6 +10,7 @@ namespace PolygonMan
     {
         [SerializeField]
         Gimmick gimmick = Gimmick.Wall;
+        CountManager countManager;
         ConnectorManager connnectorManager;
         List<WallConnector> wallConnectors = new List<WallConnector>();
         bool isExpansion = false;
@@ -17,6 +18,7 @@ namespace PolygonMan
 
         void Start()
         {
+            countManager = GameObject.Find("UI/CountManager").GetComponent<CountManager>();
             if(gimmick.Equals(Gimmick.Bridge))connnectorManager = GetComponent<ConnectorManager>();
 
             foreach (WallConnector w in GetComponentsInChildren<WallConnector>())
@@ -37,8 +39,10 @@ namespace PolygonMan
             {
                 RaycastHit2D hit = IsSelected();
 
-                if (hit && hit.collider.gameObject.Equals(gameObject))
+                if (hit && hit.collider.gameObject.Equals(gameObject) && 0 < countManager.GetCount())
                 {
+                    countManager.UpdateCount();
+
                     if (isExpansion)
                     {
                         isExpansion = false;
