@@ -57,10 +57,12 @@ namespace PolygonMan
                             }
                         }
                     }
+                    /*
                     else if(!p.GetIsGoal() && !isGoal)
                     {
                         playerManager.Turn();
                     }
+                    */
                     break;
 				case "Wall":
 					playerManager.Turn();
