@@ -15,8 +15,10 @@ namespace PolygonMan
         PlayerManager playerManager;
         bool isGround = true;
         bool isBridge = false;
+        bool isGoal = false;
 
         public string GetPolygon() { return polygon.ToString(); }
+        public bool GetIsGoal() { return isGoal; }
 
 		void Start()
 		{
@@ -31,7 +33,7 @@ namespace PolygonMan
                 case "Polygon":
                     SquareManager p = collision.GetComponent<SquareManager>();
 
-                    if (polygon.ToString().Equals(p.GetPolygon()))
+                    if (polygon.ToString().Equals(p.GetPolygon()) && !p.GetIsGoal() && !isGoal && !polygon.Equals(Polygon.Octagon) && !p.GetPolygon().Equals("Octagon"))
                     {
                         Vector3 pos = transform.position;
                         Vector3 anotherPos = collision.transform.position;
@@ -54,7 +56,7 @@ namespace PolygonMan
                             }
                         }
                     }
-                    else
+                    else if(!p.GetIsGoal() && !isGoal)
                     {
                         playerManager.Turn();
                     }
@@ -72,9 +74,20 @@ namespace PolygonMan
                     //collision.GetComponent<BridgeConnector>().AddPlayer(this);
                     collision.transform.parent.GetComponent<ConnectorManager>().AddPlayer(this);
                     break;
-                case "Goal":
-                    if (collision.GetComponent<GoalManager>().GetPolygon().Equals(polygon.ToString()))
+                case "Warp":
+                    if(collision.GetComponent<WarpManager>().GetIsWarp())
                     {
+                        iTween.MoveTo(gameObject, new Vector3 (transform.position.x,collision.GetComponent<WarpManager>().GetWarpPos().y,transform.position.z), 1.0f);
+                    }
+                    else
+                    {
+                        collision.GetComponent<WarpManager>().AddPlayer(this);
+                    }
+                    break;
+                case "Goal":
+                    if (!collision.GetComponent<GoalManager>().GetIsGoal() && collision.GetComponent<GoalManager>().GetPolygon().Equals(polygon.ToString()))
+                    {
+                        isGoal = true;
                         transform.position = collision.transform.position;
                         playerManager.Goal();
                         collision.GetComponent<GoalManager>().StageComplete();
@@ -99,6 +112,9 @@ namespace PolygonMan
                     collision.transform.parent.GetComponent<ConnectorManager>().DeletePlayer(this);
                     //if (!isGround) playerManager.ResetIsGround();
 					break;
+                case "Warp":
+                    if(!collision.GetComponent<WarpManager>().GetIsWarp())collision.GetComponent<WarpManager>().DeletePlayer(this);
+                    break;
                 default:
                     break;
             }
@@ -108,7 +124,7 @@ namespace PolygonMan
         {
 			polygon = (Polygon)Enum.ToObject(typeof(Polygon), (int)polygon + 1);
 
-            sprite.sprite = Resources.Load<Sprite>("Sprite/" + polygon.ToString());
+            sprite.sprite = Resources.Load<Sprite>("Sprite/Charactor/" + polygon.ToString());
 
             playerManager.Spin();
         }

@@ -39,10 +39,8 @@ namespace PolygonMan
             {
                 RaycastHit2D hit = IsSelected();
 
-                if (hit && hit.collider.gameObject.Equals(gameObject) && 0 < countManager.GetCount())
+                if (hit && hit.collider.gameObject.Equals(gameObject))
                 {
-                    countManager.UpdateCount();
-
                     if (isExpansion)
                     {
                         isExpansion = false;
@@ -57,8 +55,10 @@ namespace PolygonMan
                             w.ResetPosition();
                         }
                     }
-                    else
+                    else if( 0 < countManager.GetCount())
                     {
+                        countManager.UpdateCount();
+
                         isExpansion = true;
 
                         foreach (WallConnector w in wallConnectors)

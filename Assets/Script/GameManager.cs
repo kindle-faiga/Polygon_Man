@@ -9,8 +9,11 @@ namespace PolygonMan
     {
         [SerializeField]
         string stageName = "Title";
+        [SerializeField]
+        int maxGoalCount = 1;
         SpriteRenderer spriteRenderer;
         GameObject complete;
+        int goalCount = 0;
         bool isLoaded = false;
         private string sceneName;
 
@@ -24,7 +27,9 @@ namespace PolygonMan
 
         public void LoadScene()
         {
-            if (!isLoaded)
+            ++goalCount;
+
+            if (!isLoaded && goalCount == maxGoalCount)
             {
                 isLoaded = true;
                 sceneName = stageName;
