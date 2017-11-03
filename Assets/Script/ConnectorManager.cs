@@ -30,6 +30,7 @@ namespace PolygonMan
             foreach (SquareManager sqr in squareManagers.ToArray())
             {
                 sqr.transform.GetComponent<PlayerManager>().ResetIsGround();
+                sqr.transform.GetComponent<SquareManager>().ResetState();
             }
 
             squareManagers.Clear();

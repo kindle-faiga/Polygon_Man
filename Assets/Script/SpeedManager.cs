@@ -15,6 +15,8 @@ namespace PolygonMan
             spriteRenderers[2].enabled = false;
         }
 
+        public int GetSpeedCount() { return speedCount; }
+
         RaycastHit2D IsSelected()
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);

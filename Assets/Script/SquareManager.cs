@@ -19,8 +19,9 @@ namespace PolygonMan
 
         public string GetPolygon() { return polygon.ToString(); }
         public bool GetIsGoal() { return isGoal; }
+        public void ResetState() { isGround = false; isBridge = false; }
 
-		void Start()
+        void Start()
 		{
 			sprite = GetComponent<SpriteRenderer>();
 			playerManager = GetComponent<PlayerManager>();
@@ -66,13 +67,16 @@ namespace PolygonMan
 					break;
                 case "Ground":
                     isGround = true;
+                    isBridge = false;
                     playerManager.SetIsGround(collision.transform.position);
                     break;
                 case "Bridge":
                     isBridge = true;
+                    isGround = false;
                     playerManager.SetIsGround(collision.transform.position);
                     //collision.GetComponent<BridgeConnector>().AddPlayer(this);
-                    collision.transform.parent.GetComponent<ConnectorManager>().AddPlayer(this);
+                    if(collision.GetComponent<ConnectorManager>()) collision.GetComponent<ConnectorManager>().AddPlayer(this);
+                    if(collision.transform.parent.GetComponent<ConnectorManager>())collision.transform.parent.GetComponent<ConnectorManager>().AddPlayer(this);
                     break;
                 case "Warp":
                     if(collision.GetComponent<WarpManager>().GetIsWarp())
@@ -109,7 +113,8 @@ namespace PolygonMan
 				case "Bridge":
                     isBridge = false;
                     //collision.GetComponent<BridgeConnector>().DeletePlayer(this);
-                    collision.transform.parent.GetComponent<ConnectorManager>().DeletePlayer(this);
+                    if (collision.GetComponent<ConnectorManager>()) collision.GetComponent<ConnectorManager>().DeletePlayer(this);
+                    if (collision.transform.parent.GetComponent<ConnectorManager>())collision.transform.parent.GetComponent<ConnectorManager>().DeletePlayer(this);
                     //if (!isGround) playerManager.ResetIsGround();
 					break;
                 case "Warp":

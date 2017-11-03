@@ -10,7 +10,6 @@ namespace PolygonMan
     {
         [SerializeField]
         Gimmick gimmick = Gimmick.Wall;
-        CountManager countManager;
         ConnectorManager connnectorManager;
         List<WallConnector> wallConnectors = new List<WallConnector>();
         bool isExpansion = false;
@@ -18,7 +17,6 @@ namespace PolygonMan
 
         void Start()
         {
-            countManager = GameObject.Find("UI/CountManager").GetComponent<CountManager>();
             if(gimmick.Equals(Gimmick.Bridge))connnectorManager = GetComponent<ConnectorManager>();
 
             foreach (WallConnector w in GetComponentsInChildren<WallConnector>())
@@ -48,6 +46,7 @@ namespace PolygonMan
                         if(gimmick.Equals(Gimmick.Bridge))
                         {
                             connnectorManager.Release();
+                            transform.tag = "Untagged";
                         }
 
                         foreach (WallConnector w in wallConnectors)
@@ -55,11 +54,14 @@ namespace PolygonMan
                             w.ResetPosition();
                         }
                     }
-                    else if( 0 < countManager.GetCount())
+                    else
                     {
-                        countManager.UpdateCount();
-
                         isExpansion = true;
+
+                        if (gimmick.Equals(Gimmick.Bridge))
+                        {
+                            transform.tag = gimmick.ToString();
+                        }
 
                         foreach (WallConnector w in wallConnectors)
                         {

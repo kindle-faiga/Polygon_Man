@@ -9,17 +9,18 @@ namespace PolygonMan
         [SerializeField]
         bool isRight = true;
         [SerializeField]
-        float speed = 0;
+        float speed = 0.2f;
         [SerializeField]
-        float gravity = 0;
+        float gravity = 3.0f;
         [SerializeField]
 		float spinTime = 1.0f;
 
         bool isGround = true;
         bool isGoal = false;
-        float spinRange = 0;
-        float defaultSpeed = 0;
+        float spinRange = 2.0f;
+        float defaultSpeed = 0.2f;
         Rigidbody2D rigitbody2d;
+        SpeedManager speedManager;
 
         void Start()
         {
@@ -28,8 +29,15 @@ namespace PolygonMan
             if (!isRight) speed = -speed;
             speed = speed * 2;
             spinRange = Time.time;
+            speedManager = GameObject.Find("UI/Speed").GetComponent<SpeedManager>();
         }
 
+        public void ResetState()
+        {
+            isGround = false;
+            speedManager = GameObject.Find("UI/Speed").GetComponent<SpeedManager>();
+            ChangeSpeed(speedManager.GetSpeedCount());
+        }
 
 		public bool GetISRight() { return isRight; }
 		public bool GetIsGround() { return isGround; }

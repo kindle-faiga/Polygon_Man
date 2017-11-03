@@ -10,7 +10,6 @@ namespace PolygonMan
         List<SpriteRenderer> spriteRenderer = new List<SpriteRenderer>();
         [SerializeField]
         Transform goalPos;
-        CountManager countManager;
         List<SquareManager> squareManagers = new List<SquareManager>();
         bool isWarp = false;
         float depth = 10.0f;
@@ -18,8 +17,6 @@ namespace PolygonMan
 
         void Start()
         {
-            countManager = GameObject.Find("UI/CountManager").GetComponent<CountManager>();
-
             foreach (SpriteRenderer s in spriteRenderer)
             {
                 s.color = new Color(255, 255, 255, 0.5f);
@@ -68,10 +65,8 @@ namespace PolygonMan
                             s.color = new Color(255, 255, 255, 0.5f);
                         }
                     }
-                    else if(0 < countManager.GetCount())
+                    else
                     {
-                        countManager.UpdateCount();
-
                         isWarp = true;
 
                         foreach (SpriteRenderer s in spriteRenderer)
