@@ -8,7 +8,6 @@ namespace PolygonMan
 [RequireComponent(typeof(SpriteRenderer))]
     public class BridgeConnector : MonoBehaviour
     {
-        [SerializeField]
 		List<SquareManager> squareManagers = new List<SquareManager>();
         SpriteRenderer spriteRenderer;
 		BoxCollider2D col;

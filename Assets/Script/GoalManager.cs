@@ -6,6 +6,22 @@ namespace PolygonMan
     {
 		[SerializeField]
 		Polygon polygon = Polygon.Triangle;
-        public string GetPolygon() { return polygon.ToString(); }
+        GameManager gameManager;
+
+        void Start()
+        {
+            gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        }
+
+        public string GetPolygon() 
+        {
+            return polygon.ToString(); 
+        }
+
+        public void StageComplete()
+        {
+            gameManager.LoadScene();
+
+        }
 	}
 }

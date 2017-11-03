@@ -69,13 +69,15 @@ namespace PolygonMan
                 case "Bridge":
                     isBridge = true;
                     playerManager.SetIsGround(collision.transform.position);
-                    collision.GetComponent<BridgeConnector>().AddPlayer(this);
+                    //collision.GetComponent<BridgeConnector>().AddPlayer(this);
+                    collision.transform.parent.GetComponent<ConnectorManager>().AddPlayer(this);
                     break;
                 case "Goal":
                     if (collision.GetComponent<GoalManager>().GetPolygon().Equals(polygon.ToString()))
                     {
                         transform.position = collision.transform.position;
                         playerManager.Goal();
+                        collision.GetComponent<GoalManager>().StageComplete();
                     }
                     break;
                 default:
@@ -93,8 +95,9 @@ namespace PolygonMan
 					break;
 				case "Bridge":
                     isBridge = false;
-                    collision.GetComponent<BridgeConnector>().DeletePlayer(this);
-                    if (!isGround) playerManager.ResetIsGround();
+                    //collision.GetComponent<BridgeConnector>().DeletePlayer(this);
+                    collision.transform.parent.GetComponent<ConnectorManager>().DeletePlayer(this);
+                    //if (!isGround) playerManager.ResetIsGround();
 					break;
                 default:
                     break;

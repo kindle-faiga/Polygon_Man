@@ -18,7 +18,18 @@ namespace PolygonMan
         bool isGround = true;
         bool isGoal = false;
         float spinRange = 0;
+        float defaultSpeed = 0;
         Rigidbody2D rigitbody2d;
+
+        void Start()
+        {
+            rigitbody2d = GetComponent<Rigidbody2D>();
+            defaultSpeed = speed;
+            if (!isRight) speed = -speed;
+            speed = speed * 2;
+            spinRange = Time.time;
+        }
+
 
 		public bool GetISRight() { return isRight; }
 		public bool GetIsGround() { return isGround; }
@@ -28,6 +39,33 @@ namespace PolygonMan
 			transform.position = new Vector3(transform.position.x, groundPos.y, 0);
 		}
 		public void ResetIsGround() { isGround = false; }
+
+        public void ChangeSpeed(int _speed)
+        {
+            switch(_speed)
+            {
+                case 0:
+                    speed = 0;
+                    break;
+                case 1:
+                    speed = defaultSpeed;
+                    break;
+                case 2:
+                    speed = defaultSpeed * 2;
+                    break;
+                case 3:
+                    speed = defaultSpeed * 4;
+                    break;
+                default:
+                    speed = defaultSpeed;
+                    break;
+            }
+
+            if(!isRight)
+            {
+                speed = -speed;
+            }
+        }
 
 		public void Turn()
 		{
@@ -47,14 +85,7 @@ namespace PolygonMan
 		{
             spinRange = Time.time;
 		}
-
-        void Start()
-        {
-            rigitbody2d = GetComponent<Rigidbody2D>();
-            if (!isRight) speed = -speed;
-            spinRange = Time.time;
-        }
-
+       
         void FixedUpdate()
         {
             if (!isGoal)
